@@ -4,6 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.dark {
+  --background: oklch(0.14 0.01 280);
+  --primary: oklch(0.585 0.233 277);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
