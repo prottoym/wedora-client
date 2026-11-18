@@ -6,7 +6,12 @@ import { UserMenu } from "@/components/layout/UserMenu";
 
 type Props = {
   role: Role;
-  user: { name: string; email: string; image?: string | null; role: string };
+  user: {
+    name: string;
+    email: string;
+    image?: string | null;
+    role: string;
+  };
   onMenuClick: () => void;
 };
 
@@ -21,7 +26,11 @@ export function DashboardTopbar({ role, user, onMenuClick }: Props) {
       >
         <Menu className="size-5" />
       </button>
-      <p className="hidden text-sm text-muted-foreground md:block">{ROLE_LABEL[role]} dashboard</p>
+
+      <p className="hidden text-sm text-muted-foreground md:block">
+        {ROLE_LABEL[role]} dashboard
+      </p>
+
       <UserMenu user={user} />
     </header>
   );

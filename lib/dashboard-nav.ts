@@ -44,3 +44,15 @@ export const NAV: Record<Role, NavItem[]> = {
     { href: "/dashboard/admin/transactions", label: "Transactions", icon: Receipt },
   ],
 };
+
+export const PORTAL_TITLE: Record<Role, string> = {
+  vendor: "Vendor Portal",
+  customer: "Customer Portal",
+  admin: "Admin Console",
+};
+
+export const HUB_LABEL: Record<Role, string> = {
+  vendor: "Vendor Hub",
+  customer: "Customer Hub",
+  admin: "Admin Console",
+};
