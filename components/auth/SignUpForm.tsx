@@ -1,209 +1,201 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Heart, ImagePlus, Loader2, Store, X } from "lucide-react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { uploadImage } from "@/lib/imgbb";
 import { cn } from "@/lib/utils";
-import { signUpSchema, type SignUpValues } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GoogleButton } from "@/components/auth/GoogleButton";
 
-const ROLES = [
-  { value: "customer", label: "Customer", hint: "I'm planning a wedding", icon: Heart },
-  { value: "vendor", label: "Vendor", hint: "I offer wedding services", icon: Store },
-] as const;
+type Role = "customer" | "vendor";
+type Errors = Partial<Record<"name" | "email" | "password" | "businessName", string>>;
+
+const ROLES: { value: Role; label: string; hint: string }[] = [
+  { value: "customer", label: "Customer", hint: "Find and book wedding services" },
+  { value: "vendor", label: "Vendor", hint: "Publish services and get bookings" },
+];
+
+function passwordError(password: string) {
+  if (password.length < 6) return "Password must be at least 6 characters.";
+  if (!/[A-Z]/.test(password)) return "Password needs an uppercase letter.";
+  if (!/[a-z]/.test(password)) return "Password needs a lowercase letter.";
+  return undefined;
+}
 
 export function SignUpForm() {
   const router = useRouter();
-  const [show, setShow] = useState(false);
+  const [role, setRole] = useState<Role>("customer");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [businessName, setBusinessName] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Errors>({});
+  const [loading, setLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<SignUpValues>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: { role: "customer" },
-  });
-
-  const role = watch("role");
-
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
-
-  function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    if (!f.type.startsWith("image/")) return toast.error("Please select an image file");
-    if (f.size > 5 * 1024 * 1024) return toast.error("Image must be under 5MB");
-    if (preview) URL.revokeObjectURL(preview);
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
+  function validate(): Errors {
+    const found: Errors = {};
+    if (name.trim().length < 2) found.name = "Enter your full name.";
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) found.email = "Enter a valid email address.";
+    const pw = passwordError(password);
+    if (pw) found.password = pw;
+    if (role === "vendor" && businessName.trim().length < 2) {
+      found.businessName = "Enter your business name.";
+    }
+    return found;
   }
 
-  function removeFile() {
-    if (preview) URL.revokeObjectURL(preview);
-    setFile(null);
-    setPreview(null);
-  }
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const found = validate();
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
 
-  async function onSubmit(values: SignUpValues) {
-    let image: string | undefined;
+    setLoading(true);
+    try {
+      let image: string | undefined;
+      if (file) {
+        try {
+          image = await uploadImage(file);
+        } catch (err) {
+          toast.error(err instanceof Error ? err.message : "Image upload failed.");
+          return;
+        }
+      }
 
-    if (file) {
-      try {
-        image = await uploadImage(file);
-      } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Image upload failed");
+      const { error } = await authClient.signUp.email({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+        image,
+        role,
+        businessName: role === "vendor" ? businessName.trim() : undefined,
+      });
+
+      if (error) {
+        toast.error(error.message ?? "Registration failed. Please try again.");
         return;
       }
+
+      toast.success("Account created. Welcome to WedPlan!");
+      router.push("/dashboard");
+      router.refresh();
+    } finally {
+      setLoading(false);
     }
-
-    const { error } = await authClient.signUp.email({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      image,
-      role: values.role,
-      businessName: values.role === "vendor" ? values.businessName : undefined,
-    });
-
-    if (error) {
-      toast.error(error.message || "Could not create your account");
-      return;
-    }
-
-    toast.success("Account created successfully!");
-    router.push("/dashboard");
-    router.refresh();
   }
 
   return (
-    <div className="space-y-5">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-        {/* Role */}
-        <div className="space-y-1.5">
-          <Label className="text-xs">I am a</Label>
-          <div className="grid grid-cols-2 gap-3">
-            {ROLES.map((r) => (
-              <button
-                key={r.value}
-                type="button"
-                onClick={() => setValue("role", r.value, { shouldValidate: true })}
-                className={cn(
-                  "flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-colors",
-                  role === r.value
-                    ? "border-primary bg-primary/10"
-                    : "border-white/10 hover:border-white/25",
-                )}
-                aria-pressed={role === r.value}
-              >
-                <r.icon className={cn("size-4", role === r.value ? "text-primary" : "text-muted-foreground")} />
-                <span className="text-xs font-semibold">{r.label}</span>
-                <span className="text-[10px] text-muted-foreground">{r.hint}</span>
-              </button>
-            ))}
-          </div>
+    <div className="w-full max-w-md space-y-6">
+      <div className="space-y-1 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">Create your account</h1>
+        <p className="text-sm text-muted-foreground">Join WedPlan as a customer or a vendor.</p>
+      </div>
+
+      <form onSubmit={onSubmit} className="space-y-4" noValidate>
+        <div className="grid grid-cols-2 gap-2">
+          {ROLES.map((r) => (
+            <button
+              key={r.value}
+              type="button"
+              onClick={() => setRole(r.value)}
+              aria-pressed={role === r.value}
+              className={cn(
+                "rounded-lg border p-3 text-left transition-colors",
+                role === r.value
+                  ? "border-primary bg-primary/10"
+                  : "border-border hover:bg-accent",
+              )}
+            >
+              <p className="text-sm font-medium">{r.label}</p>
+              <p className="text-xs text-muted-foreground">{r.hint}</p>
+            </button>
+          ))}
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="name" className="text-xs">Full Name</Label>
-          <Input id="name" autoComplete="name" placeholder="Your full name" {...register("name")} />
-          {errors.name && <p className="text-[11px] text-destructive">{errors.name.message}</p>}
+          <Label htmlFor="name">Full name</Label>
+          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+          {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
         </div>
 
         {role === "vendor" && (
           <div className="space-y-1.5">
-            <Label htmlFor="businessName" className="text-xs">Business Name</Label>
-            <Input id="businessName" placeholder="e.g. Golden Hour Studio" {...register("businessName")} />
-            {errors.businessName && <p className="text-[11px] text-destructive">{errors.businessName.message}</p>}
+            <Label htmlFor="businessName">Business name</Label>
+            <Input
+              id="businessName"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+            />
+            {errors.businessName && (
+              <p className="text-xs text-destructive">{errors.businessName}</p>
+            )}
           </div>
         )}
 
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-xs">Email</Label>
-          <Input id="email" type="email" autoComplete="email" placeholder="you@example.com" {...register("email")} />
-          {errors.email && <p className="text-[11px] text-destructive">{errors.email.message}</p>}
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
+          {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="password" className="text-xs">Password</Label>
-          <div className="relative">
-            <Input
-              id="password"
-              type={show ? "text" : "password"}
-              autoComplete="new-password"
-              placeholder="Min 6 chars, upper & lower case"
-              className="pr-10"
-              {...register("password")}
-            />
-            <button
-              type="button"
-              onClick={() => setShow((s) => !s)}
-              aria-label={show ? "Hide password" : "Show password"}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
-          </div>
-          {errors.password && <p className="text-[11px] text-destructive">{errors.password.message}</p>}
-        </div>
-
-        {/* Profile image */}
-        <div className="space-y-1.5">
-          <Label className="text-xs">Profile Image (optional)</Label>
-          {preview ? (
-            <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={preview} alt="Preview" className="size-14 rounded-full border border-white/10 object-cover" />
-              <Button type="button" variant="ghost" size="sm" onClick={removeFile} className="h-8 gap-1 text-xs">
-                <X className="size-3.5" /> Remove
-              </Button>
-            </div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+          />
+          {errors.password ? (
+            <p className="text-xs text-destructive">{errors.password}</p>
           ) : (
-            <label
-              htmlFor="image"
-              className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-white/15 p-3 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-            >
-              <ImagePlus className="size-5" />
-              Click to upload (max 5MB)
-            </label>
+            <p className="text-xs text-muted-foreground">
+              6+ characters with an uppercase and a lowercase letter.
+            </p>
           )}
-          <input id="image" type="file" accept="image/*" onChange={onPickFile} className="sr-only" />
         </div>
 
-        <Button type="submit" disabled={isSubmitting} className="h-10 w-full text-xs shadow-[0_0_20px_-4px] shadow-primary/70">
-          {isSubmitting && <Loader2 className="size-4 animate-spin" />}
-          {isSubmitting ? "Creating account..." : "Create Account"}
+        <div className="space-y-1.5">
+          <Label htmlFor="image">Profile image (optional)</Label>
+          <Input
+            id="image"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          />
+        </div>
+
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading && <Loader2 className="size-4 animate-spin" />}
+          {loading ? "Creating account..." : "Create account"}
         </Button>
       </form>
 
-      <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-        <div className="h-px flex-1 bg-white/10" />
+      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+        <span className="h-px flex-1 bg-border" />
         or
-        <div className="h-px flex-1 bg-white/10" />
+        <span className="h-px flex-1 bg-border" />
       </div>
 
-      <GoogleButton label="Sign up with Google" />
+      <GoogleButton />
 
-      <p className="text-center text-xs text-muted-foreground">
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/sign-in" className="font-medium text-primary hover:text-primary/80">
+        <Link href="/sign-in" className="font-medium text-primary hover:underline">
           Sign in
         </Link>
       </p>

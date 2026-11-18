@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -45,32 +46,42 @@ export function UserMenu({ user }: Props) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring">
+      <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <Avatar className="size-8">
           <AvatarImage src={user.image ?? undefined} alt={user.name} />
           <AvatarFallback className="text-xs">{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="font-normal">
-          <p className="truncate text-sm font-medium">{user.name}</p>
-          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="font-normal">
+            <p className="truncate text-sm font-medium">{user.name}</p>
+            <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard">
+
+        <DropdownMenuGroup>
+          <DropdownMenuItem render={<Link href="/dashboard" />}>
             <LayoutDashboard className="size-4" /> Dashboard
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href={profileHref}>
+          </DropdownMenuItem>
+          <DropdownMenuItem render={<Link href={profileHref} />}>
             <Settings className="size-4" /> Profile Settings
-          </Link>
-        </DropdownMenuItem>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
-          <LogOut className="size-4" /> Logout
-        </DropdownMenuItem>
+
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onClick={handleLogout}
+            className="text-destructive focus:text-destructive"
+          >
+            <LogOut className="size-4" /> Logout
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
