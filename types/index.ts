@@ -13,3 +13,11 @@ export type Service = {
     subscriptionPlan?: "free" | "premium";
   };
 };
+
+export type ServicesResponse = {
+  services: Service[];
+  total: number;
+  page: number;
+  pages: number;
+  error?: boolean;
+};
