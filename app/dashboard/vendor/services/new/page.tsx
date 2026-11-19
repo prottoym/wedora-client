@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { ComingSoon } from "@/components/dashboard/ComingSoon";
+import ServiceForm from "@/components/vendor/ServiceForm";
 
 export const metadata: Metadata = { title: "Add Service" };
 
-export default function AddServicePage() {
+export default function NewServicePage() {
   return (
     <>
-      <PageHeader title="Add Service" description="Publish a new wedding service." />
-      <ComingSoon message="The add service form comes in the services step." />
+      <PageHeader title="Add Service" description="New services go live after admin approval." />
+      <ServiceForm />
     </>
   );
 }

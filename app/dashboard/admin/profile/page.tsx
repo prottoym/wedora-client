@@ -4,10 +4,10 @@ import { ProfileForm } from "@/components/profile/ProfileForm";
 
 export const metadata: Metadata = { title: "Profile Settings" };
 
-export default function VendorProfilePage() {
+export default function AdminProfilePage() {
   return (
     <>
-      <PageHeader title="Profile Settings" description="Update your name, business name and photo." />
+      <PageHeader title="Profile Settings" description="Update your name and photo." />
       <ProfileForm />
     </>
   );

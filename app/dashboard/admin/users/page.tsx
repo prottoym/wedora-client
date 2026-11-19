@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { ComingSoon } from "@/components/dashboard/ComingSoon";
+import ManageUsers from "@/components/admin/ManageUsers";
 
 export const metadata: Metadata = { title: "Manage Users" };
 
-export default function ManageUsersPage() {
+export default function AdminUsersPage() {
   return (
     <>
-      <PageHeader title="Manage Users" description="Search users, block or unblock accounts." />
-      <ComingSoon message="The user list comes in the admin step." />
+      <PageHeader title="Users" description="Search, filter and block accounts." />
+      <ManageUsers />
     </>
   );
 }

@@ -72,5 +72,6 @@ export const auth = betterAuth({
     },
   },
 
+
   plugins: [jwt(), nextCookies()], // nextCookies() must stay the last plugin
 });

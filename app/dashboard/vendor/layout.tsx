@@ -1,10 +1,6 @@
-import { Suspense } from "react";
-import { RoleGuard } from "@/components/dashboard/RoleGuard";
+import type { ReactNode } from "react";
+import RequireRole from "@/components/dashboard/RequireRole";
 
-export default function VendorLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <Suspense fallback={null}>
-      <RoleGuard role="vendor">{children}</RoleGuard>
-    </Suspense>
-  );
+export default function VendorLayout({ children }: { children: ReactNode }) {
+  return <RequireRole role="vendor">{children}</RequireRole>;
 }

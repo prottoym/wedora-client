@@ -1,6 +1,12 @@
 import { authClient } from "@/lib/auth-client";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+
+export const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL ||
+  (process.env.NODE_ENV === "development" ? "http://localhost:5000" : "")
+).replace(/\/+$/, "");
+
+console.log("API_URL =", API_URL); // test shesh hole muche dio
 
 export class ApiError extends Error {
   status: number;
@@ -10,53 +16,34 @@ export class ApiError extends Error {
   }
 }
 
-let cached: { token: string; exp: number } | null = null;
+type Options = Omit<RequestInit, "body"> & { auth?: boolean; body?: unknown };
 
-// logout korar shomoy eta call korbe (UserMenu e)
-export function clearTokenCache() {
-  cached = null;
-}
-
-async function getToken(force = false) {
-  if (!force && cached && cached.exp > Date.now()) return cached.token;
-
-  const { data, error } = await authClient.token();
-  if (error || !data?.token) {
-    throw new ApiError("Please sign in again", 401);
-  }
-  cached = { token: data.token, exp: Date.now() + 5 * 60 * 1000 };
-  return data.token;
-}
-
+/** path starts with /api/..., set auth: true for private routes */
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit = {},
+  { auth = false, body, headers, ...init }: Options = {},
 ): Promise<T> {
-  const run = async (force: boolean) => {
-    const token = await getToken(force);
-    return fetch(`${API}${path}`, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  };
+  const finalHeaders = new Headers(headers);
+  if (body !== undefined) finalHeaders.set("Content-Type", "application/json");
+
+  if (auth) {
+    const { data } = await authClient.token();
+    if (!data?.token) throw new ApiError("Please sign in to continue.", 401);
+    finalHeaders.set("Authorization", `Bearer ${data.token}`);
+  }
 
   let res: Response;
   try {
-    res = await run(false);
-    // token expire hole notun token niye ekbar retry
-    if (res.status === 401) res = await run(true);
-  } catch (e) {
-    if (e instanceof ApiError) throw e;
-    throw new ApiError("Could not reach the server. Please try again.", 0);
+    res = await fetch(`${API_URL}${path}`, {
+      ...init,
+      headers: finalHeaders,
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+  } catch {
+    throw new ApiError("Cannot reach the server. Please try again.", 0);
   }
 
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new ApiError(json.message || "Something went wrong", res.status);
-  }
-  return json as T;
+  const payload = await res.json().catch(() => null);
+  if (!res.ok) throw new ApiError(payload?.message ?? "Something went wrong.", res.status);
+  return payload as T;
 }

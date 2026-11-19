@@ -1,32 +1,38 @@
-export const CATEGORIES = [
+export type Category = {
+  name: string; // server er CATEGORIES er sathe exact mile thakte hobe
+  icon: "camera" | "venue" | "flower" | "food" | "makeup" | "fashion";
+  tagline: string;
+};
+
+export const CATEGORIES: Category[] = [
   {
     name: "Photography & Videography",
-    tagline: "Timeless stories, candid moments & cinematic films",
     icon: "camera",
+    tagline: "Capture every moment with cinematic stories and timeless portraits.",
   },
   {
     name: "Wedding Venues",
-    tagline: "Gardens, ballrooms & heritage estates",
     icon: "venue",
+    tagline: "Beautiful halls, gardens and resorts for your big day.",
   },
   {
     name: "Decoration & Florist",
-    tagline: "Floral arches, stage design & table styling",
     icon: "flower",
+    tagline: "Stage design, floral arrangements and dreamy decor.",
   },
   {
     name: "Catering Services",
-    tagline: "Chef-led menus, desserts & beverage bars",
     icon: "food",
+    tagline: "Delicious menus crafted for every guest and every taste.",
   },
   {
     name: "Makeup & Styling",
-    tagline: "Bridal beauty, hair artistry & touch-ups",
     icon: "makeup",
+    tagline: "Bridal makeup, hair and styling by trusted artists.",
   },
   {
     name: "Wedding Fashion",
-    tagline: "Gowns, sherwanis, suits & accessories",
     icon: "fashion",
+    tagline: "Bridal wear, sherwanis, jewellery and accessories.",
   },
-] as const;
+];

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { ComingSoon } from "@/components/dashboard/ComingSoon";
+import MyBookings from "@/components/customer/MyBookings";
 
 export const metadata: Metadata = { title: "My Bookings" };
 
 export default function CustomerBookingsPage() {
   return (
     <>
-      <PageHeader title="My Bookings" description="Track and cancel your booking requests." />
-      <ComingSoon message="Your bookings will appear here once bookings are built." />
+      <PageHeader title="My Bookings" description="Your requests and their status." />
+      <MyBookings />
     </>
   );
 }

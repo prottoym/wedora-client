@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { ComingSoon } from "@/components/dashboard/ComingSoon";
+import SubscriptionPanel from "@/components/vendor/SubscriptionPanel";
 
 export const metadata: Metadata = { title: "Subscription" };
 
-export default function SubscriptionPage() {
+export default function VendorSubscriptionPage() {
   return (
     <>
-      <PageHeader title="Subscription" description="Free and Premium plans." />
-      <ComingSoon message="Plans and Stripe checkout come in the payment step." />
+      <PageHeader title="Subscription" description="Choose the plan that fits your business." />
+      <SubscriptionPanel />
     </>
   );
 }

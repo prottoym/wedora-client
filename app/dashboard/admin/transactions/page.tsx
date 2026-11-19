@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { ComingSoon } from "@/components/dashboard/ComingSoon";
+import Transactions from "@/components/admin/Transactions";
 
 export const metadata: Metadata = { title: "Transactions" };
 
-export default function TransactionsPage() {
+export default function AdminTransactionsPage() {
   return (
     <>
-      <PageHeader title="Transactions" description="Subscription payments on the platform." />
-      <ComingSoon message="Transactions will appear here after Stripe is connected." />
+      <PageHeader title="Transactions" description="Premium subscription payments (read-only)." />
+      <Transactions />
     </>
   );
 }

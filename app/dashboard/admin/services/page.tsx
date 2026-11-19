@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { ComingSoon } from "@/components/dashboard/ComingSoon";
+import ManageServices from "@/components/admin/ManageServices";
+import TableSkeleton from "@/components/shared/TableSkeleton";
 
 export const metadata: Metadata = { title: "Manage Services" };
 
-export default function ManageServicesPage() {
+export default function AdminServicesPage() {
   return (
     <>
-      <PageHeader title="Manage Services" description="Approve, reject or remove submitted services." />
-      <ComingSoon message="Service review comes in the admin step." />
+      <PageHeader title="Services" description="Approve, reject or remove vendor services." />
+      <Suspense fallback={<TableSkeleton />}>
+        <ManageServices />
+      </Suspense>
     </>
   );
 }
