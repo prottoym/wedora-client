@@ -31,7 +31,7 @@ export function UserMenu({ user }: Props) {
     .join("")
     .toUpperCase();
 
-  async function handleLogout() {
+   async function handleLogout() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
@@ -39,7 +39,9 @@ export function UserMenu({ user }: Props) {
           router.push("/");
           router.refresh();
         },
-        onError: () => toast.error("Could not log out. Try again."),
+        onError: () => {
+          toast.error("Could not log out. Try again.");
+        },
       },
     });
   }
