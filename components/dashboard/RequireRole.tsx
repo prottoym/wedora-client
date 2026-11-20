@@ -5,7 +5,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 
-/** Role layout e wrap kora hoy. Server o alada kore role check kore. */
+
 export default function RequireRole({ role, children }: { role: string; children: ReactNode }) {
   const { data, isPending } = useSession();
   if (isPending) return null;
