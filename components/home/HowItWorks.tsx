@@ -28,7 +28,7 @@ export function HowItWorks() {
             Simple process
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-            How WedPlan Works
+            How Wedora Works
           </h2>
         </Reveal>
 
