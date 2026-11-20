@@ -32,7 +32,7 @@ export function WhyChoose() {
           Why us
         </p>
         <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-          Why Choose WedPlan?
+          Why Choose Wedora?
         </h2>
         <p className="mt-2 text-xs text-muted-foreground">
           We replace endless messages and spreadsheets with one organised place
