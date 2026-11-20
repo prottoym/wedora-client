@@ -20,7 +20,7 @@ export default function SubscriptionPanel() {
   const [busy, setBusy] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
 
-  // Premium kokhono client theke set hoy na. Stripe webhook server e activate kore.
+  
   async function upgrade() {
     setBusy(true);
     try {
