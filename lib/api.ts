@@ -6,7 +6,7 @@ export const API_URL = (
   (process.env.NODE_ENV === "development" ? "http://localhost:5000" : "")
 ).replace(/\/+$/, "");
 
-console.log("API_URL =", API_URL); // test shesh hole muche dio
+console.log("API_URL =", API_URL); 
 
 export class ApiError extends Error {
   status: number;
