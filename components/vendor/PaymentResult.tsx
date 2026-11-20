@@ -11,8 +11,7 @@ import { moneyCents } from "@/lib/format";
 type SessionRes = { status: "pending" | "paid" | "failed"; amount?: number };
 
 /**
- * Premium activate kore Stripe webhook (server). Success page shudhu status dekhay,
- * webhook ashte kichu second lage, tai poll kori.
+ * Premium activate .
  */
 export default function PaymentResult() {
   const sessionId = useSearchParams().get("session_id");
@@ -31,7 +30,7 @@ export default function PaymentResult() {
         setRes(r);
         if (r.status !== "pending") return;
       } catch {
-        /* abar try korbe */
+        /*  try again */
       }
       if (++tries >= 15) return alive && setTimedOut(true);
       setTimeout(poll, 2000);
