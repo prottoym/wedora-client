@@ -5,7 +5,7 @@ import { ROLE_LABEL, type Role } from "@/lib/dashboard-nav";
 
 type Props = {
   role: Role;
-  user?: unknown; // ager version er jonno, ekhon use hoy na
+  user?: unknown; 
   onMenuClick: () => void;
 };
 
