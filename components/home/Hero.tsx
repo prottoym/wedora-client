@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -26,12 +25,12 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="pointer-events-none absolute -top-40 left-1/2 h-96 w-[48rem] -translate-x-1/2 rounded-full bg-primary/15 blur-3xl" />
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 md:py-24 lg:grid-cols-2">
+      <div className="relative mx-auto max-w-4xl px-4 py-20 text-center md:py-28">
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="space-y-6"
+          className="flex flex-col items-center space-y-6"
         >
           <motion.span
             variants={item}
@@ -51,14 +50,14 @@ export function Hero() {
 
           <motion.p
             variants={item}
-            className="max-w-md text-sm leading-relaxed text-muted-foreground"
+            className="max-w-xl text-sm leading-relaxed text-muted-foreground"
           >
             Browse reviewed photographers, venues, florists, caterers and
             stylists. Compare prices, pick your date and send a booking request
             in a few clicks.
           </motion.p>
 
-          <motion.div variants={item} className="flex flex-wrap gap-3">
+          <motion.div variants={item} className="flex flex-wrap justify-center gap-3">
             <Button
               nativeButton={false}
               render={<Link href="/services" />}
@@ -79,7 +78,7 @@ export function Hero() {
 
           <motion.dl
             variants={item}
-            className="flex gap-8 border-t border-white/10 pt-6"
+            className="flex w-full max-w-md justify-center gap-10 border-t border-white/10 pt-6"
           >
             {STATS.map((s) => (
               <div key={s.label}>
@@ -88,31 +87,6 @@ export function Hero() {
               </div>
             ))}
           </motion.dl>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative"
-        >
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
-            <Image
-              src="/images/hero.jpg"
-              alt="Couple celebrating their wedding"
-              fill
-              priority
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
-          </div>
-          <div className="absolute -bottom-4 left-4 rounded-xl border border-white/10 bg-background/80 px-4 py-3 shadow-lg backdrop-blur-md sm:-left-6">
-            <p className="text-xs font-semibold">Verified vendors</p>
-            <p className="text-[11px] text-muted-foreground">
-              Every listing is reviewed before going live
-            </p>
-          </div>
         </motion.div>
       </div>
     </section>
