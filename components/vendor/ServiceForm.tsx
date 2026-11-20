@@ -14,7 +14,7 @@ import { uploadImage } from "@/lib/imgbb";
 import { CATEGORIES, MAX_IMAGES } from "@/lib/service-constants";
 import type { Service } from "@/types/service";
 
-type Props = { service?: Service }; // service thakle Edit mode
+type Props = { service?: Service }; // service  Edit mode
 
 export default function ServiceForm({ service }: Props) {
   const router = useRouter();
@@ -53,7 +53,7 @@ export default function ServiceForm({ service }: Props) {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    // quick client check (server o abar check kore)
+    // quick client check 
     if (serviceName.trim().length < 3) return toast.error("Service name must be at least 3 characters");
     if (!category) return toast.error("Please choose a category");
     if (description.trim().length < 10) return toast.error("Description must be at least 10 characters");
