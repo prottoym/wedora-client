@@ -1,6 +1,6 @@
 import type { SelectHTMLAttributes } from "react";
 
-/** ShadCN Select er (Base UI) jhamela chhara simple styled select */
+/** ShadCN Select er (Base UI) simple styled select */
 export default function NativeSelect({
   className = "",
   ...props
