@@ -1,5 +1,5 @@
 export type Category = {
-  name: string; // server er CATEGORIES er sathe exact mile thakte hobe
+  name: string; 
   icon: "camera" | "venue" | "flower" | "food" | "makeup" | "fashion";
   tagline: string;
 };
