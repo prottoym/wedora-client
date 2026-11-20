@@ -23,7 +23,7 @@ const SORTS = [
 
 type ListResponse = Paged & { services: Service[] };
 
-/** Filter gulo URL e thake (?search=&category=&location=&sort=&page=), tai refresh/share e thik thake */
+
 export default function BrowseServices() {
   const router = useRouter();
   const pathname = usePathname();
@@ -51,7 +51,7 @@ export default function BrowseServices() {
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
 
-  // debounce hoye gele URL update
+ 
   useEffect(() => {
     if (dSearch !== urlSearch) update({ search: dSearch });
     // eslint-disable-next-line react-hooks/exhaustive-deps
