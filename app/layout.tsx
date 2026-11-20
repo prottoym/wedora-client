@@ -13,7 +13,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  title: { default: "Wedora", template: "%s | WedPlan" },
+  title: { default: "Wedora", template: "%s | Wedora" },
   description:
     "Wedora is a wedding planning platform where customers discover vendors and request bookings.",
 };
