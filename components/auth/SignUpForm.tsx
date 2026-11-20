@@ -83,7 +83,7 @@ export function SignUpForm() {
         return;
       }
 
-      toast.success("Account created. Welcome to WedPlan!");
+      toast.success("Account created. Welcome to Wedora!");
       router.push("/dashboard");
       router.refresh();
     } finally {
@@ -95,7 +95,7 @@ export function SignUpForm() {
     <div className="w-full max-w-md space-y-6">
       <div className="space-y-1 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Create your account</h1>
-        <p className="text-sm text-muted-foreground">Join WedPlan as a customer or a vendor.</p>
+        <p className="text-sm text-muted-foreground">Join Wedora as a customer or a vendor.</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
