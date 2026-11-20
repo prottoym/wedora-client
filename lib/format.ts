@@ -16,7 +16,7 @@ export const dateFmt = (d?: string | Date | null) =>
     ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
     : "—";
 
-/** "YYYY-MM-DD" event date (timezone shift hobe na) */
+/** "YYYY-MM-DD" event date (timezone) */
 export const dayFmt = (d?: string | null) =>
   d
     ? new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", {
