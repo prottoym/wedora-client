@@ -35,7 +35,7 @@ const TABS: { value: "" | ServiceStatus; label: string }[] = [
 ];
 
 export default function ManageServices() {
-  const initial = useSearchParams().get("status") as ServiceStatus | null; // overview theke ?status=pending
+  const initial = useSearchParams().get("status") as ServiceStatus | null; 
   const [status, setStatus] = useState<"" | ServiceStatus>(
     initial && ["pending", "approved", "rejected"].includes(initial) ? initial : "",
   );
