@@ -60,7 +60,7 @@ export function SignInForm() {
     <div className="w-full max-w-md space-y-6">
       <div className="space-y-1 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
-        <p className="text-sm text-muted-foreground">Sign in to continue to WedPlan.</p>
+        <p className="text-sm text-muted-foreground">Sign in to continue to Wedora.</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
@@ -103,7 +103,7 @@ export function SignInForm() {
       <GoogleButton />
 
       <p className="text-center text-sm text-muted-foreground">
-        New to WedPlan?{" "}
+        New to Wedora?{" "}
         <Link href="/sign-up" className="font-medium text-primary hover:underline">
           Create an account
         </Link>
