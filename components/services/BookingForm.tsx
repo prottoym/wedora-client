@@ -24,7 +24,7 @@ export default function BookingForm({ serviceId }: { serviceId: string }) {
 
   if (isPending) return null;
 
-  // Booking shudhu customer er jonno
+  
   if (role !== "customer") {
     return (
       <div className="rounded-xl border p-5 text-sm">
@@ -64,7 +64,7 @@ export default function BookingForm({ serviceId }: { serviceId: string }) {
       toast.success("Booking request sent");
       setDone(true);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not send request"); // 409 duplicate ekhane ashbe
+      toast.error(err instanceof Error ? err.message : "Could not send request"); // 409 duplicate 
     } finally {
       setSaving(false);
     }
